@@ -52,7 +52,7 @@ public class RegisterServiceImpl implements RegisterService {
         String photo = "https://res.coooolfan.com/c-q.jpg";
         User user = new User(null,username,encodedPassword,photo);
         userMapper.insert(user);
-        map.put("msg","创建成功");
+        map.put("msg","success");
         return map;
 
 

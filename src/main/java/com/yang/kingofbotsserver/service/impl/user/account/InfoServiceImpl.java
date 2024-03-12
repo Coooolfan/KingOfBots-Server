@@ -15,12 +15,19 @@ import java.util.Map;
 public class InfoServiceImpl implements InfoService {
     @Override
     public Map<String, String> getInfo() {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
+        Map<String, String> map = new HashMap<>();
+        UserDetailsImpl loginUser;
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
+        } catch (RuntimeException e) {
+            map.put("msg", "Invalid token");
+            return map;
+        }
+
         User user = loginUser.getUser();
 
-        Map<String, String> map = new HashMap<>();
         map.put("msg", "success");
         map.put("id", user.getId().toString());
         map.put("username", user.getUsername());
