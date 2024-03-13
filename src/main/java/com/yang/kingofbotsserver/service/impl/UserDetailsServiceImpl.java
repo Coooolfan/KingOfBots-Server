@@ -5,6 +5,8 @@ import com.yang.kingofbotsserver.mapper.UserMapper;
 import com.yang.kingofbotsserver.pojo.User;
 import com.yang.kingofbotsserver.service.impl.utils.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,4 +27,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         return new UserDetailsImpl(user);
     }
+
+    public static User getUser() {
+        UsernamePasswordAuthenticationToken authentication =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
+        return loginUser.getUser();
+    }
+
 }
