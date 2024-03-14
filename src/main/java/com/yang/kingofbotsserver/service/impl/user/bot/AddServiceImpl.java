@@ -23,7 +23,7 @@ public class AddServiceImpl implements AddService {
         Map<String, String> map = new HashMap<>();
 
         String title = data.get("title");
-        String desc = data.get("description");
+        String desc = data.get("desc");
         String content = data.get("content");
 
         if (title == null || title.isEmpty()) {
