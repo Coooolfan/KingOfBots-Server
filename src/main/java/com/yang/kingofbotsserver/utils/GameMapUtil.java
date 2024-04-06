@@ -1,11 +1,12 @@
 package com.yang.kingofbotsserver.utils;
 
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.yang.kingofbotsserver.consumer.WebSocketServer;
+import com.yang.kingofbotsserver.pojo.Record;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,7 +22,7 @@ public class GameMapUtil extends Thread {
     private final Player playerA;
     @Getter
     private final Player playerB;
-    private ReentrantLock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock();
     private Integer nextStepA = null;
     private Integer nextStepB = null;
     private String status = "playing"; // "playing" or "finished"
@@ -139,6 +140,32 @@ public class GameMapUtil extends Thread {
         return false;
     }
 
+    private String getMapString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                stringBuilder.append(g[i][j]);
+        return stringBuilder.toString();
+    }
+
+    private void saveToDatabase() {
+        Record record = new Record(
+                null,
+                playerA.getId(),
+                playerA.getSx(),
+                playerA.getSx(),
+                playerB.getId(),
+                playerB.getSx(),
+                playerB.getSy(),
+                playerA.getStepsString(),
+                playerB.getStepsString(),
+                this.getMapString(),
+                this.loser,
+                new Date()
+        );
+        WebSocketServer.getRecordMapper().insert(record);
+    }
+
     private Boolean checkValid(List<SnakeCell> snakeA, List<SnakeCell> snakeB) {
         int n = snakeA.size();
         SnakeCell cell = snakeA.get(n - 1);
@@ -161,10 +188,10 @@ public class GameMapUtil extends Thread {
         List<SnakeCell> snakeB = playerB.getCells();
         boolean validA = checkValid(snakeA, snakeB);
         boolean validB = checkValid(snakeB, snakeA);
-        if (!validA || !validB){
-            status="finished";
-            if(!validA && !validB) loser = "all";
-            else if(!validA) loser = "a";
+        if (!validA || !validB) {
+            status = "finished";
+            if (!validA && !validB) loser = "all";
+            else if (!validA) loser = "a";
             else loser = "b";
         }
     }
@@ -224,6 +251,7 @@ public class GameMapUtil extends Thread {
                 } finally {
                     lock.unlock();
                 }
+                saveToDatabase();
                 sendResult();
                 break;
             }

@@ -1,6 +1,7 @@
 package com.yang.kingofbotsserver.consumer;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.yang.kingofbotsserver.mapper.RecordMapper;
 import com.yang.kingofbotsserver.mapper.UserMapper;
 import com.yang.kingofbotsserver.pojo.User;
 import com.yang.kingofbotsserver.utils.GameMapUtil;
@@ -27,12 +28,19 @@ public class WebSocketServer {
     private User user;
     private Session session = null;
     private static UserMapper userMapper;
+    @Getter
+    private static RecordMapper recordMapper;
     private GameMapUtil game = null;
 
     @Autowired
-    public void setIserMapper(UserMapper userMapper) {
+    public void setUserMapper(UserMapper userMapper) {
         WebSocketServer.userMapper = userMapper;
     }
+    @Autowired
+    public void setRecordMapper(RecordMapper recordMapper){
+        WebSocketServer.recordMapper = recordMapper;
+    }
+
 
     @OnOpen
     public void onOpen(Session session, @PathParam("token") String token) throws IOException {
