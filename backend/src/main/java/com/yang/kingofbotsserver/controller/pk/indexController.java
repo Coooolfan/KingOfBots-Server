@@ -22,7 +22,9 @@ public class indexController {
     @PostMapping("/pk/start/game/")
     public String startGame(@RequestParam MultiValueMap<String, String> data) {
         Integer a = Integer.parseInt(Objects.requireNonNull(data.getFirst("a_id")));
+        Integer aBotId = Integer.parseInt(Objects.requireNonNull(data.getFirst("a_bot_id")));
         Integer b = Integer.parseInt(Objects.requireNonNull(data.getFirst("b_id")));
-        return startGameService.startGame(a, b);
+        Integer bBotId = Integer.parseInt(Objects.requireNonNull(data.getFirst("b_bot_id")));
+        return startGameService.startGame(a, b, aBotId, bBotId);
     }
 }

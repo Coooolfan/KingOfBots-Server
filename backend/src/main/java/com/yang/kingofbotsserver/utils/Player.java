@@ -15,6 +15,8 @@ public class Player {
     private Integer sx; // 行数
     private Integer sy; // 列数
     private List<Integer> steps;
+    private String botCode;
+    private Integer botId;
 
     private boolean checkTailIncreasing(int steps) {
         if (steps <= 10) return true;

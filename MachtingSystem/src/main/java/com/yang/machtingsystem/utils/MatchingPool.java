@@ -23,13 +23,13 @@ public class MatchingPool extends Thread {
         MatchingPool.restTemplate = restTemplate;
     }
 
-    public void addPlayer(Integer userId, Integer rating) {
+    public void addPlayer(Integer userId, Integer rating, Integer botId) {
         lock.lock();
         try {
             players = players.stream()
                     .filter(player -> !player.getUserId().equals(userId))
                     .collect(Collectors.toList());
-            players.add(new Player(userId, rating, 0));
+            players.add(new Player(userId, rating, 0, botId));
         } finally {
             lock.unlock();
         }
@@ -64,13 +64,14 @@ public class MatchingPool extends Thread {
     private void sendResult(Player player1, Player player2) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("a_id", player1.getUserId().toString());
+        map.add("a_bot_id", player1.getBotId().toString());
         map.add("b_id", player2.getUserId().toString());
+        map.add("b_bot_id", player2.getBotId().toString());
         restTemplate.postForObject(startUrl, map, String.class);
         System.out.println("Matched players: " + player1.getUserId() + " and " + player2.getUserId());
     }
 
     private void matchPlayers() {
-        System.out.println("Matching players...");
         boolean[] used = new boolean[players.size()];
         for (int i = 0; i < players.size(); i++) {
             if (used[i]) {

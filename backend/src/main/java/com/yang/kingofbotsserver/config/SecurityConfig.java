@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 配置跨域
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/user/account/token/", "/user/account/register/","/pk/start/game/").permitAll()
+                        .requestMatchers("/user/account/token/", "/user/account/register/", "/pk/start/game/", "/pk/receive/bot/move/").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated());
 

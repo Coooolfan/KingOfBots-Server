@@ -9,9 +9,9 @@ import java.util.Map;
 public class MatchingService {
     public final static MatchingPool matchingPool = new MatchingPool();
 
-    public String addPlayer(Integer userId, Integer rating) {
+    public String addPlayer(Integer userId, Integer rating, Integer botId) {
         System.out.println("Player " + userId + " added! Rating: " + rating);
-        matchingPool.addPlayer(userId, rating);
+        matchingPool.addPlayer(userId, rating, botId);
         return "Player " + userId + " added! Rating: " + rating;
     }
 

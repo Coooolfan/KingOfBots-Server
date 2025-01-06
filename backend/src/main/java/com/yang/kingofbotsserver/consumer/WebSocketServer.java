@@ -1,8 +1,10 @@
 package com.yang.kingofbotsserver.consumer;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.yang.kingofbotsserver.mapper.BotMapper;
 import com.yang.kingofbotsserver.mapper.RecordMapper;
 import com.yang.kingofbotsserver.mapper.UserMapper;
+import com.yang.kingofbotsserver.pojo.Bot;
 import com.yang.kingofbotsserver.pojo.User;
 import com.yang.kingofbotsserver.utils.GameMapUtil;
 import com.yang.kingofbotsserver.utils.JwtUtil;
@@ -26,16 +28,22 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class WebSocketServer {
     //    线程安全的hashmap
     @Getter
-    private static final ConcurrentHashMap<Integer, WebSocketServer> users = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<Integer, WebSocketServer> users = new ConcurrentHashMap<>();
     private User user;
     private Session session = null;
     private static UserMapper userMapper;
     @Getter
     private static RecordMapper recordMapper;
-    private GameMapUtil game = null;
-    private static RestTemplate restTemplate;
+    private static BotMapper botMapper;
+    public GameMapUtil game = null;
+    public static RestTemplate restTemplate;
     private final static String addPlayer = "http://localhost:8081/player/add/";
     private final static String removePlayer = "http://localhost:8081/player/remove/";
+
+    @Autowired
+    public void setBotMapper(BotMapper botMapper) {
+        WebSocketServer.botMapper = botMapper;
+    }
 
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
@@ -70,10 +78,12 @@ public class WebSocketServer {
         System.out.println("Connected " + user);
     }
 
-    public static void startGame(Integer aId, Integer bId) {
+    public static void startGame(Integer aId, Integer bId, Integer aBotId, Integer bBotId) {
         User a = userMapper.selectById(aId);
         User b = userMapper.selectById(bId);
-        GameMapUtil game = new GameMapUtil(13, 14, 20, a.getId(), b.getId());
+        Bot aBot = botMapper.selectById(aBotId);
+        Bot bBot = botMapper.selectById(bBotId);
+        GameMapUtil game = new GameMapUtil(13, 14, 20, a.getId(), b.getId(), aBot, bBot);
         game.createMap();
         game.start();
         if (users.get(a.getId()) != null)
@@ -123,7 +133,7 @@ public class WebSocketServer {
         JSONObject data = JSONObject.parseObject(message);
         String event = data.getString("event");
         if ("start-matching".equals(event)) {
-            startMatching();
+            startMatching(data.getInteger("bot_id"));
         } else if ("stop-matching".equals(event)) {
             stopMatching();
         } else if ("move".equals(event)) {
@@ -134,9 +144,11 @@ public class WebSocketServer {
 
     private void move(Integer d) {
         if (game.getPlayerA().getId().equals(user.getId())) {
-            game.setNextStepA(d);
+            if (game.getPlayerA().getBotId().equals(-1))
+                game.setNextStepA(d);
         } else if (game.getPlayerB().getId().equals(user.getId())) {
-            game.setNextStepB(d);
+            if (game.getPlayerB().getBotId().equals(-1))
+                game.setNextStepB(d);
         }
     }
 
@@ -147,11 +159,12 @@ public class WebSocketServer {
         restTemplate.postForObject(removePlayer, data, String.class);
     }
 
-    private void startMatching() {
+    private void startMatching(Integer botId) {
         System.out.println("start matching!");
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
         data.add("user_id", this.user.getId().toString());
         data.add("rating", this.user.getRating().toString());
+        data.add("bot_id", botId.toString());
         restTemplate.postForObject(addPlayer, data, String.class);
     }
 
