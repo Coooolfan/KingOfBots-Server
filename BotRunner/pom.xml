@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>BotRunner</name>
     <description>BotRunner</description>
+    <packaging>jar</packaging>
     <url/>
     <licenses>
         <license/>
@@ -67,6 +68,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--这里写上main方法所在类的路径-->
+                <configuration>
+                    <mainClass>com.yang.botrunner.botrunner.BotRunnerApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

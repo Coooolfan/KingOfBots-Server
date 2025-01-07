@@ -19,7 +19,7 @@ public class GetRecordController {
         this.getRecordList = getRecordList;
     }
 
-    @GetMapping("/record/getlist/")
+    @GetMapping("/api/record/getlist/")
     JSONObject getRecordList(@RequestParam Map<String,String> data) {
         Integer page = Integer.parseInt(data.get("page"));
         return getRecordList.getList(page);

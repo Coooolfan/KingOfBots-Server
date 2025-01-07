@@ -14,7 +14,6 @@ public class BotPool extends Thread {
         lock.lock();
         try {
             Bot newBot = new Bot(userId, botCode, input);
-            System.out.println("Bot added: " + newBot);
             bots.add(newBot);
             condition.signalAll();
         } finally {
