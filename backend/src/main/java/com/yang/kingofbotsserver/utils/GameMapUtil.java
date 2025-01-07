@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.yang.kingofbotsserver.consumer.WebSocketServer;
 import com.yang.kingofbotsserver.pojo.Bot;
 import com.yang.kingofbotsserver.pojo.Record;
+import com.yang.kingofbotsserver.pojo.User;
 import lombok.Getter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -191,7 +192,25 @@ public class GameMapUtil extends Thread {
         return stringBuilder.toString();
     }
 
+    private void updateUserRating(Player player, Integer reting) {
+        User user = WebSocketServer.userMapper.selectById(player.getId());
+        user.setRating(reting);
+        WebSocketServer.userMapper.updateById(user);
+    }
+
     private void saveToDatabase() {
+        Integer ratingA = WebSocketServer.userMapper.selectById(playerA.getId()).getRating();
+        Integer ratingB = WebSocketServer.userMapper.selectById(playerB.getId()).getRating();
+        if ("a".equals(loser)) {
+            ratingA -= 2;
+            ratingB += 5;
+        } else if ("b".equals(loser)) {
+            ratingA += 5;
+            ratingB -= 2;
+        }
+        updateUserRating(playerA, ratingA);
+        updateUserRating(playerB, ratingB);
+
         Record record = new Record(
                 null,
                 playerA.getId(),
@@ -277,6 +296,7 @@ public class GameMapUtil extends Thread {
                 if (status.equals("playing")) {
                     sendMove();
                 } else {
+                    saveToDatabase();
                     sendResult();
                     break;
                 }

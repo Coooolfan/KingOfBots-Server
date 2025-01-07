@@ -51,8 +51,8 @@ public class RegisterServiceImpl implements RegisterService {
         }
 
         String encodedPassword = passwordEncoder.encode(passowrd);
-        String photo = "https://res.coooolfan.com/c-q.jpg";
-        User user = new User(null, username, encodedPassword, photo,1500);
+        String photo = "https://api.multiavatar.com/" + username.trim() + ".png";
+        User user = new User(null, username, encodedPassword, photo, 1500);
         userMapper.insert(user);
         map.put("msg", "success");
         return map;
