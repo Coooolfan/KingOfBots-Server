@@ -16,6 +16,7 @@ public class Player {
     private Integer sy; // 列数
     private List<Integer> steps;
     private String botCode;
+    private String botLanguage;
     private Integer botId;
 
     private boolean checkTailIncreasing(int steps) {

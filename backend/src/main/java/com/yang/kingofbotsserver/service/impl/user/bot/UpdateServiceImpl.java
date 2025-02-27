@@ -24,6 +24,7 @@ public class UpdateServiceImpl implements UpdateService {
         String title = data.get("title");
         String desc = data.get("description");
         String content = data.get("content");
+        String language = data.get("language");
         Bot bot = botMapper.selectById(bot_id);
         Map<String, String> map = new HashMap<>();
 //        参数合法性校验
@@ -68,6 +69,7 @@ public class UpdateServiceImpl implements UpdateService {
                 title,
                 desc,
                 content,
+                language,
                 bot.getCreatetime(),
                 new Date()
         );

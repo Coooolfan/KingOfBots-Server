@@ -25,6 +25,7 @@ public class AddServiceImpl implements AddService {
         String title = data.get("title");
         String desc = data.get("desc");
         String content = data.get("content");
+        String language = data.get("language");
 
         if (title == null || title.isEmpty()) {
             map.put("msg", "Bot标题不能为空");
@@ -51,7 +52,7 @@ public class AddServiceImpl implements AddService {
             return map;
         }
         Date now = new Date();
-        Bot bot = new Bot(null, user.getId(), title, desc, content,  now, now);
+        Bot bot = new Bot(null, user.getId(), title, desc, content, language, now, now);
         try {
             botMapper.insert(bot);
         } catch (Exception e) {

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 public class BotRunningService {
     public final static BotPool botPool = new BotPool();
 
-    public String addBot(Integer userId,String botCode,String input){
-        botPool.addBot(userId,botCode,input);
+    public String addBot(Integer userId, String botCode, String input, String language){
+        botPool.addBot(userId,botCode,input,language);
         return "Bot added";
     }
 }

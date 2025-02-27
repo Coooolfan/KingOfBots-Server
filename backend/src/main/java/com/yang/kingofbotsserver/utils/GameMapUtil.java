@@ -59,16 +59,20 @@ public class GameMapUtil extends Thread {
         this.g = new int[rows][cols];
         Integer botIdA = -1, botIdB = -1;
         String botCodeA = "", botCodeB = "";
+        String botLanguageA = "java", botLanguageB = "java";
         if (botA != null) {
             botIdA = botA.getId();
             botCodeA = botA.getContent();
+            botLanguageA = botA.getLanguage();
         }
+        playerA = new Player(idA, this.rows - 2, 1, new ArrayList<>(), botCodeA, botLanguageA, botIdA);
+
         if (botB != null) {
             botIdB = botB.getId();
             botCodeB = botB.getContent();
+            botLanguageB = botB.getLanguage();
         }
-        playerA = new Player(idA, this.rows - 2, 1, new ArrayList<>(), botCodeA, botIdA);
-        playerB = new Player(idB, 1, this.cols - 2, new ArrayList<>(), botCodeB, botIdB);
+        playerB = new Player(idB, 1, this.cols - 2, new ArrayList<>(), botCodeB, botLanguageB, botIdB);
 
     }
 
@@ -151,6 +155,7 @@ public class GameMapUtil extends Thread {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("user_id", player.getId().toString());
         map.add("bot_code", player.getBotCode());
+        map.add("language", player.getBotLanguage());
         map.add("input", getInput(player));
         WebSocketServer.restTemplate.postForObject(addBotUrl, map, String.class);
     }

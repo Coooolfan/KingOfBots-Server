@@ -14,48 +14,42 @@
 # 数据库DDL
 
 ```sql
-create table bot
+CREATE TABLE bot
 (
-    id          int auto_increment
-        primary key,
-    user_id     int            null,
-    title       varchar(100)   null,
-    description varchar(300)   null,
-    content     varchar(10000) null,
-    createtime  datetime       null,
-    modifytime  datetime       null,
-    constraint id
-        unique (id)
-);
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    user_id     INT NULL,
+    title       VARCHAR(100) CHARACTER SET utf8mb4 NULL,
+    description VARCHAR(300) CHARACTER SET utf8mb4 NULL,
+    content     VARCHAR(10000) CHARACTER SET utf8mb4 NULL,
+    createtime  DATETIME NULL,
+    modifytime  DATETIME NULL,
+    CONSTRAINT id UNIQUE (id)
+) CHARACTER SET utf8mb4;
 
-create table record
+CREATE TABLE record
 (
-    id         int auto_increment
-        primary key,
-    a_id       int           null,
-    a_sx       int           null,
-    a_sy       int           null,
-    b_id       int           null,
-    b_sx       int           null,
-    b_sy       int           null,
-    a_steps    varchar(1000) null,
-    b_steps    varchar(1000) null,
-    map        varchar(1000) null,
-    loser      varchar(10)   null,
-    createtime datetime      null,
-    constraint id
-        unique (id)
-);
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    a_id       INT NULL,
+    a_sx       INT NULL,
+    a_sy       INT NULL,
+    b_id       INT NULL,
+    b_sx       INT NULL,
+    b_sy       INT NULL,
+    a_steps    VARCHAR(1000) CHARACTER SET utf8mb4 NULL,
+    b_steps    VARCHAR(1000) CHARACTER SET utf8mb4 NULL,
+    map        VARCHAR(1000) CHARACTER SET utf8mb4 NULL,
+    loser      VARCHAR(10) CHARACTER SET utf8mb4 NULL,
+    createtime DATETIME NULL,
+    CONSTRAINT id UNIQUE (id)
+) CHARACTER SET utf8mb4;
 
-create table user
+CREATE TABLE user
 (
-    id       int auto_increment
-        primary key,
-    username varchar(100)     null,
-    password varchar(100)     null,
-    photo    varchar(1000)    null,
-    rating   int default 1500 not null,
-    constraint id
-        unique (id)
-);
+    id       INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) CHARACTER SET utf8mb4 NULL,
+    password VARCHAR(100) CHARACTER SET utf8mb4 NULL,
+    photo    VARCHAR(1000) CHARACTER SET utf8mb4 NULL,
+    rating   INT DEFAULT 1500 NOT NULL,
+    CONSTRAINT id UNIQUE (id)
+) CHARACTER SET utf8mb4;
 ```
