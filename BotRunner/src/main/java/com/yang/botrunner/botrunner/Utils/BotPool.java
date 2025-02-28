@@ -14,7 +14,7 @@ public class BotPool extends Thread {
         lock.lock();
         try {
             System.out.println("added bot to pool " + language);
-            Bot newBot = new Bot(userId, botCode, input);
+            Bot newBot = new Bot(userId, botCode, input, language);
             bots.add(newBot);
             condition.signalAll();
         } finally {
@@ -24,7 +24,13 @@ public class BotPool extends Thread {
     }
 
     private void consume(Bot bot) {
-        BotCodeRunner botCodeRunner = new BotCodeRunner();
+        CodeRunner botCodeRunner = switch (bot.getLanguage().toLowerCase()) {
+            case "java" -> new CodeRunnerJava();
+            case "javascript" -> new CodeRunnerJavaScript();
+            case "cpp" -> new CodeRunnerCpp();
+            case "python" -> new CodeRunnerPython();
+            default -> throw new IllegalArgumentException("Unsupported language: " + bot.getLanguage());
+        };
         botCodeRunner.startTimeout(2000, bot);
     }
 
