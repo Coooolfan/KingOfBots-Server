@@ -1,25 +1,29 @@
-package com.yang.botrunner.botrunner.Utils;
+package com.yang.botrunner.botrunner.Utils.CodeRunnerImpl;
 
+import com.yang.botrunner.botrunner.Utils.Bot;
+import com.yang.botrunner.botrunner.Utils.CodeRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class CodeRunnerPython extends Thread implements CodeRunner {
+public class CodeRunnerJavaScript extends Thread implements CodeRunner {
     private Bot bot;
     private static RestTemplate restTemplate;
     private final static String URL = "http://localhost:8080/pk/receive/bot/move/";
 
     @Autowired
     public void setRestTemplate(RestTemplate restTemplate) {
-        CodeRunnerPython.restTemplate = restTemplate;
+        CodeRunnerJavaScript.restTemplate = restTemplate;
     }
 
     public void startTimeout(long timeout, Bot bot) {
@@ -38,10 +42,9 @@ public class CodeRunnerPython extends Thread implements CodeRunner {
     public void run() {
         System.out.println("BotRunner " + bot.getUserId() + " started");
 
-//        Do something……
         String direction = "-1";
         try {
-            direction = runPythonCode(bot.getBotCode(), bot.getInput());
+            direction = runJavaScriptCode(bot.getBotCode(), bot.getInput());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,22 +61,22 @@ public class CodeRunnerPython extends Thread implements CodeRunner {
     }
 
     /**
-     * 执行Python代码并获取输出结果
+     * 执行JavaScript代码并获取输出结果
      *
-     * @param code     Python代码字符串
-     * @param argument 传递给Python脚本的命令行参数
-     * @return Python代码的输出结果
+     * @param code     JavaScript代码字符串
+     * @param argument 传递给JavaScript脚本的命令行参数
+     * @return JavaScript代码的输出结果
      * @throws IOException          如果IO操作失败
      * @throws InterruptedException 如果进程执行被中断
      */
-    public static String runPythonCode(String code, String argument) throws IOException, InterruptedException {
-        // 创建临时Python文件
-        Path tempFile = Files.createTempFile("python_script_", ".py");
+    public static String runJavaScriptCode(String code, String argument) throws IOException, InterruptedException {
+        // 创建临时JavaScript文件
+        Path tempFile = Files.createTempFile("js_script_", ".js");
         Files.write(tempFile, code.getBytes());
 
         try {
-            // python [脚本路径] [参数]
-            ProcessBuilder processBuilder = new ProcessBuilder("python", tempFile.toString(), argument);
+            // node [脚本路径] [参数]
+            ProcessBuilder processBuilder = new ProcessBuilder("node", tempFile.toString(), argument);
             processBuilder.redirectErrorStream(true); // 合并标准错误和标准输出
 
             // 启动进程
@@ -92,12 +95,12 @@ public class CodeRunnerPython extends Thread implements CodeRunner {
             boolean completed = process.waitFor(10, TimeUnit.SECONDS);
             if (!completed) {
                 process.destroyForcibly();
-                throw new InterruptedException("Python脚本执行超时");
+                throw new InterruptedException("JavaScript脚本执行超时");
             }
 
             // 检查进程退出值
             if (process.exitValue() != 0) {
-                throw new IOException("Python脚本执行失败，退出码: " + process.exitValue());
+                throw new IOException("JavaScript脚本执行失败，退出码: " + process.exitValue());
             }
 
             return output.toString().trim();
