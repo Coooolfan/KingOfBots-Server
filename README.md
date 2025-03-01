@@ -21,6 +21,9 @@ CREATE TABLE bot
     title       VARCHAR(100) CHARACTER SET utf8mb4 NULL,
     description VARCHAR(300) CHARACTER SET utf8mb4 NULL,
     content     VARCHAR(10000) CHARACTER SET utf8mb4 NULL,
+    language    VARCHAR(100) CHARACTER SET utf8mb4 NULL,
+    status      VARCHAR(100) NULL,
+    target_file varchar(200) NULL,
     createtime  DATETIME NULL,
     modifytime  DATETIME NULL,
     CONSTRAINT id UNIQUE (id)

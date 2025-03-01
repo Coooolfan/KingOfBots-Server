@@ -20,6 +20,8 @@ public class Bot {
     private String description;
     private String content;
     private String language;
+    private String status;
+    private String targetFile;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

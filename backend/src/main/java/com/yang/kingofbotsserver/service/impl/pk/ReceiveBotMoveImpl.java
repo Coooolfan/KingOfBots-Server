@@ -10,16 +10,22 @@ public class ReceiveBotMoveImpl implements ReceiveBotMoveService {
     @Override
     public String receiveBotMove(Integer userId, Integer direction) {
         System.out.println("userId: " + userId + " direction: " + direction);
-        if (WebSocketServer.users.get(userId) != null) {
-            GameMapUtil game = WebSocketServer.users.get(userId).game;
-            if (game != null) {
-                if (game.getPlayerA().getId().equals(userId)) {
-                    game.setNextStepA(direction);
-                } else if (game.getPlayerB().getId().equals(userId)) {
-                    game.setNextStepB(direction);
-                }
-            }
+        WebSocketServer socketServer = WebSocketServer.users.get(userId);
+
+        if (socketServer == null)
+            return "fail";
+
+        GameMapUtil game = socketServer.game;
+        if (game == null)
+            return "fail";
+
+        if (game.getPlayerA().getId().equals(userId)) {
+            game.setNextStepA(direction);
+        } else if (game.getPlayerB().getId().equals(userId)) {
+            game.setNextStepB(direction);
         }
+
+
         return "success";
     }
 }

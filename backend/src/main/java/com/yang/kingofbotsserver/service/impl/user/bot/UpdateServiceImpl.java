@@ -5,6 +5,7 @@ import com.yang.kingofbotsserver.pojo.Bot;
 import com.yang.kingofbotsserver.pojo.User;
 import com.yang.kingofbotsserver.service.impl.UserDetailsServiceImpl;
 import com.yang.kingofbotsserver.service.user.bot.UpdateService;
+import com.yang.kingofbotsserver.utils.LanguageHelp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +63,7 @@ public class UpdateServiceImpl implements UpdateService {
             map.put("msg", "操作非法：权限不足");
             return map;
         }
-
+        String botStatus = LanguageHelp.isStatic(language);
         Bot new_bot = new Bot(
                 bot_id,
                 user.getId(),
@@ -70,6 +71,8 @@ public class UpdateServiceImpl implements UpdateService {
                 desc,
                 content,
                 language,
+                botStatus,
+                "-",
                 bot.getCreatetime(),
                 new Date()
         );

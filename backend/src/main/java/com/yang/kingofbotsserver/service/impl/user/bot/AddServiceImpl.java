@@ -5,6 +5,7 @@ import com.yang.kingofbotsserver.pojo.Bot;
 import com.yang.kingofbotsserver.pojo.User;
 import com.yang.kingofbotsserver.service.impl.UserDetailsServiceImpl;
 import com.yang.kingofbotsserver.service.user.bot.AddService;
+import com.yang.kingofbotsserver.utils.LanguageHelp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +53,8 @@ public class AddServiceImpl implements AddService {
             return map;
         }
         Date now = new Date();
-        Bot bot = new Bot(null, user.getId(), title, desc, content, language, now, now);
+        String botStatus = LanguageHelp.isStatic(language);
+        Bot bot = new Bot(null, user.getId(), title, desc, content, language, botStatus, "-", now, now);
         try {
             botMapper.insert(bot);
         } catch (Exception e) {
