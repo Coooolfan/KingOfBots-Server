@@ -80,4 +80,9 @@ public class UpdateServiceImpl implements UpdateService {
         map.put("msg", "success");
         return map;
     }
+
+    @Override
+    public Map<String, String> reviceComplied(Map<String, String> data) {
+        return Map.of();
+    }
 }

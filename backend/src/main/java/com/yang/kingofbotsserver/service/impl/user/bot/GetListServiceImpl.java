@@ -23,4 +23,13 @@ public class GetListServiceImpl implements GetListService {
         queryWrapper.eq("user_id", user.getId());
         return botMapper.selectList(queryWrapper);
     }
+
+    @Override
+    public List<Bot> getUncompiled() {
+        QueryWrapper<Bot> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Bot::getStatus, "uncompile");
+        List<Bot> bots = botMapper.selectList(queryWrapper);
+        System.out.println(bots);
+        return bots;
+    }
 }

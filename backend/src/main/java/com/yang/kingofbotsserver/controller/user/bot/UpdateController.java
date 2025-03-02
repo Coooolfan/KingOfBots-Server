@@ -16,4 +16,9 @@ public class UpdateController {
     public Map<String,String> update(@RequestBody Map<String,String> data){
         return updateService.update(data);
     }
+
+    @PostMapping("/api/revice/bot/update/")
+    public Map<String,String> revice(@RequestBody Map<String,String> data){
+        return updateService.reviceComplied(data);
+    }
 }
