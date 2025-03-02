@@ -1,7 +1,5 @@
 package com.yang.botrunner.botrunner.Utils;
 
-import org.springframework.web.client.RestTemplate;
-
 public interface CodeRunner {
 
     /**
