@@ -8,6 +8,7 @@ import com.yang.kingofbotsserver.service.user.bot.UpdateService;
 import com.yang.kingofbotsserver.utils.LanguageHelp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -82,7 +83,13 @@ public class UpdateServiceImpl implements UpdateService {
     }
 
     @Override
-    public Map<String, String> reviceComplied(Map<String, String> data) {
-        return Map.of();
+    public void reviceComplied(MultiValueMap<String, String> data) {
+        Integer botId = Integer.parseInt(data.get("id").get(0));
+        String botStatus = data.get("status").get(0);
+        String BotTargetFile = data.get("target_file").get(0);
+        Bot bot = botMapper.selectById(botId);
+        bot.setStatus(botStatus);
+        bot.setTargetFile(BotTargetFile);
+        botMapper.updateById(bot);
     }
 }
