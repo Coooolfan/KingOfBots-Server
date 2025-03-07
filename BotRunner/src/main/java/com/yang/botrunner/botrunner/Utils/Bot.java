@@ -12,4 +12,5 @@ public class Bot {
     String botCode;
     String input;
     String language;
+    String targetFile;
 }

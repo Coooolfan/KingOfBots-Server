@@ -20,6 +20,7 @@ public class BotRunningController {
         String BotCode = data.getFirst("bot_code");
         String input = data.getFirst("input");
         String language = data.getFirst("language");
-        return botRunningService.addBot(userId, BotCode, input,language);
+        String targetFile = data.getFirst("target_file");
+        return botRunningService.addBot(userId, BotCode, input, language, targetFile);
     }
 }

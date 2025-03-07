@@ -18,6 +18,7 @@ public class Player {
     private String botCode;
     private String botLanguage;
     private Integer botId;
+    private String targetFile;
 
     private boolean checkTailIncreasing(int steps) {
         if (steps <= 10) return true;

@@ -11,6 +11,8 @@ public class ReceiveBotMoveImpl implements ReceiveBotMoveService {
     public String receiveBotMove(Integer userId, Integer direction) {
         System.out.println("userId: " + userId + " direction: " + direction);
         WebSocketServer socketServer = WebSocketServer.users.get(userId);
+        if (direction == -1)
+            return "fail";
 
         if (socketServer == null)
             return "fail";

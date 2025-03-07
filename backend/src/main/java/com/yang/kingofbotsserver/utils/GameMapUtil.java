@@ -60,19 +60,22 @@ public class GameMapUtil extends Thread {
         Integer botIdA = -1, botIdB = -1;
         String botCodeA = "", botCodeB = "";
         String botLanguageA = "java", botLanguageB = "java";
+        String botTargetFileA = "", botTargetFileB = "";
         if (botA != null) {
             botIdA = botA.getId();
             botCodeA = botA.getContent();
             botLanguageA = botA.getLanguage();
+            botTargetFileA = botA.getTargetFile();
         }
-        playerA = new Player(idA, this.rows - 2, 1, new ArrayList<>(), botCodeA, botLanguageA, botIdA);
+        playerA = new Player(idA, this.rows - 2, 1, new ArrayList<>(), botCodeA, botLanguageA, botIdA, botTargetFileA);
 
         if (botB != null) {
             botIdB = botB.getId();
             botCodeB = botB.getContent();
             botLanguageB = botB.getLanguage();
+            botTargetFileB = botB.getTargetFile();
         }
-        playerB = new Player(idB, 1, this.cols - 2, new ArrayList<>(), botCodeB, botLanguageB, botIdB);
+        playerB = new Player(idB, 1, this.cols - 2, new ArrayList<>(), botCodeB, botLanguageB, botIdB, botTargetFileB);
 
     }
 
@@ -140,13 +143,7 @@ public class GameMapUtil extends Thread {
             me = playerB;
             you = playerA;
         }
-        return getMapString() + "#" +
-                me.getSx() + "#" +
-                me.getSy() + "#(" +
-                me.getStepsString() + ")#" +
-                you.getSx() + "#" +
-                you.getSy() + "#(" +
-                you.getStepsString() + ")";
+        return getMapString() + "#" + me.getSx() + "#" + me.getSy() + "#(" + me.getStepsString() + ")#" + you.getSx() + "#" + you.getSy() + "#(" + you.getStepsString() + ")";
 
     }
 
@@ -157,6 +154,7 @@ public class GameMapUtil extends Thread {
         map.add("bot_code", player.getBotCode());
         map.add("language", player.getBotLanguage());
         map.add("input", getInput(player));
+        map.add("target_file", player.getTargetFile());
         WebSocketServer.restTemplate.postForObject(addBotUrl, map, String.class);
     }
 
@@ -216,20 +214,7 @@ public class GameMapUtil extends Thread {
         updateUserRating(playerA, ratingA);
         updateUserRating(playerB, ratingB);
 
-        Record record = new Record(
-                null,
-                playerA.getId(),
-                playerA.getSx(),
-                playerA.getSx(),
-                playerB.getId(),
-                playerB.getSx(),
-                playerB.getSy(),
-                playerA.getStepsString(),
-                playerB.getStepsString(),
-                this.getMapString(),
-                this.loser,
-                new Date()
-        );
+        Record record = new Record(null, playerA.getId(), playerA.getSx(), playerA.getSx(), playerB.getId(), playerB.getSx(), playerB.getSy(), playerA.getStepsString(), playerB.getStepsString(), this.getMapString(), this.loser, new Date());
         WebSocketServer.getRecordMapper().insert(record);
     }
 

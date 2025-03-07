@@ -15,11 +15,11 @@ public class BotPool extends Thread {
     private final Condition condition = lock.newCondition();
     private final Queue<Bot> bots = new LinkedList<>();
 
-    public void addBot(Integer userId, String botCode, String input, String language) {
+    public void addBot(Integer userId, String botCode, String input, String language,String targetFile) {
         lock.lock();
         try {
             System.out.println("added bot to pool " + language);
-            Bot newBot = new Bot(userId, botCode, input, language);
+            Bot newBot = new Bot(userId, botCode, input, language,targetFile);
             bots.add(newBot);
             condition.signalAll();
         } finally {
