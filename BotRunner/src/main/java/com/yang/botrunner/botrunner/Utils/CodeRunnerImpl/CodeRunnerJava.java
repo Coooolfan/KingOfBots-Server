@@ -40,7 +40,6 @@ public class CodeRunnerJava extends Thread implements CodeRunner {
     public void run() {
         System.out.println("BotRunner " + bot.getUserId() + " started");
 
-//        Do something……
         String direction = "-1";
         try {
             direction = runJar(bot.getTargetFile(), bot.getInput());
@@ -69,9 +68,8 @@ public class CodeRunnerJava extends Thread implements CodeRunner {
      * @throws InterruptedException 如果进程执行被中断
      */
     public String runJar(String jarPath, String argument) throws IOException, InterruptedException {
-        // python [脚本路径] [参数]
-        String JAVA_BIN_PATH = "C:/Program Files/Eclipse Adoptium/jdk-21.0.4.7-hotspot/bin/java.exe";
-        ProcessBuilder processBuilder = new ProcessBuilder(JAVA_BIN_PATH, "-jar", jarPath, argument);
+//        String JAVA_BIN_PATH = "C:/Program Files/Eclipse Adoptium/jdk-21.0.4.7-hotspot/bin/java.exe";
+        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", jarPath, argument);
         System.out.println(processBuilder.command());
         processBuilder.redirectErrorStream(true); // 合并标准错误和标准输出
 
