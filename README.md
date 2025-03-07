@@ -1,15 +1,31 @@
-# KingOfBots-Server
+# KingOfBots-Server <br/> Bot多语言支持：JAVA、JavaScript、Python、C++
 
 **此项目为Acwing的Spingboot课程中项目的后端部分**
 
-> [!TIP]
-> 此仓库仅用于代码归档
+前端仓库访问：<https://github.com/Coooolfan/KingOfBots>
 
-相较于课程中的代码，此项目有以下差异：
+> [!TIP]
+> 此代码仅用于概念设计与程序实现！不具备生产环境的安全性与稳定性！<br/>相关微服务的调用无鉴权！
+
+相较于课程已有的功能，此项目有以下差异：
 - 一些包名不同
 - 微服务无鉴权
 
-前端仓库访问：<https://github.com/Coooolfan/KingOfBots>
+相较于原课程的功能，此项目有以下差异：
+- 提供开箱即用的Docker镜像（仅BotRunner微服务）
+- 提供Bot多语言支持（JAVA、JavaScript、Python、C++）
+  - 抽象出BotRunner和BotCompiler接口
+  - Java: 使用Gradle编译Jar包
+  - C++: 使用g++编译可执行文件
+  - JavaScript: 使用Node.js直接运行
+  - Python: 使用Python解释器直接运行
+- 对于需要编译的语言，提供了定时任务编译所有未编译的Bot代码
+    - 无重复编译，系统会自动保留编译产物，运行时直接使用
+    - 编辑Bot后会自动重新编译
+
+# 运行指南
+
+TODO
 
 # 数据库DDL
 
