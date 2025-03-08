@@ -9,6 +9,7 @@ public class BotRunningService {
 
     public BotRunningService(BotPool botPool) {
         this.botPool = botPool;
+        botPool.start();
     }
 
     public String addBot(Integer userId, String botCode, String input, String language,String targetFile) {

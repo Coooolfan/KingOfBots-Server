@@ -2,8 +2,8 @@ package com.yang.botrunner.botrunner.Utils.CodeRunnerImpl;
 
 import com.yang.botrunner.botrunner.Utils.Bot;
 import com.yang.botrunner.botrunner.Utils.CodeRunner;
+import com.yang.botrunner.botrunner.config.ConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -18,8 +18,6 @@ import java.util.concurrent.TimeUnit;
 public class CodeRunnerJava extends Thread implements CodeRunner {
     private Bot bot;
     private static RestTemplate restTemplate;
-    @Value("${kob.backend.host}")
-    private String HOST;
     private final static String URL = "/pk/receive/bot/move/";
 
     @Autowired
@@ -58,7 +56,7 @@ public class CodeRunnerJava extends Thread implements CodeRunner {
         data.add("user_id", userId.toString());
         data.add("direction", response);
         System.out.println(data);
-        restTemplate.postForObject(HOST + URL, data, String.class);
+        restTemplate.postForObject(ConfigProperties.getHost() + URL, data, String.class);
     }
 
     /**
@@ -72,6 +70,8 @@ public class CodeRunnerJava extends Thread implements CodeRunner {
      */
     public String runJar(String jarPath, String argument) throws IOException, InterruptedException {
 //        String JAVA_BIN_PATH = "C:/Program Files/Eclipse Adoptium/jdk-21.0.4.7-hotspot/bin/java.exe";
+//        ProcessBuilder processBuilder = new ProcessBuilder(JAVA_BIN_PATH, "-jar", jarPath, argument);
+
         ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", jarPath, argument);
         System.out.println(processBuilder.command());
         processBuilder.redirectErrorStream(true); // 合并标准错误和标准输出

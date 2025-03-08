@@ -17,9 +17,7 @@ public class MatchingPool extends Thread {
     private static List<Player> players = new ArrayList<>();
     private ReentrantLock lock = new ReentrantLock();
     private static RestTemplate restTemplate;
-    @Value("${kob.backend.host}")
-    private String HOST;
-    private final static String startUrl = "/pk/start/game/";
+    private final static String startUrl = "http://localhost:8080/pk/start/game/";
 
     @Autowired
     public void setRestTemplate(RestTemplate restTemplate) {
@@ -70,7 +68,7 @@ public class MatchingPool extends Thread {
         map.add("a_bot_id", player1.getBotId().toString());
         map.add("b_id", player2.getUserId().toString());
         map.add("b_bot_id", player2.getBotId().toString());
-        restTemplate.postForObject(HOST + startUrl, map, String.class);
+        restTemplate.postForObject(startUrl, map, String.class);
         System.out.println("Matched players: " + player1.getUserId() + " and " + player2.getUserId());
     }
 

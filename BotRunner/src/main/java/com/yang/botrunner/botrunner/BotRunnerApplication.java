@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 public class BotRunnerApplication {
     public static void main(String[] args) {
-        BotRunningService.botPool.start();
         SpringApplication.run(BotRunnerApplication.class, args);
     }
 

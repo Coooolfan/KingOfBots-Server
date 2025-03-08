@@ -2,8 +2,8 @@ package com.yang.botrunner.botrunner.Utils.CodeRunnerImpl;
 
 import com.yang.botrunner.botrunner.Utils.Bot;
 import com.yang.botrunner.botrunner.Utils.CodeRunner;
+import com.yang.botrunner.botrunner.config.ConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -18,8 +18,6 @@ import java.util.concurrent.TimeUnit;
 public class CodeRunnerPython extends Thread implements CodeRunner {
     private Bot bot;
     private static RestTemplate restTemplate;
-    @Value("${kob.backend.host}")
-    private String HOST;
     private final static String URL = "/pk/receive/bot/move/";
 
     @Autowired
@@ -59,7 +57,7 @@ public class CodeRunnerPython extends Thread implements CodeRunner {
         data.add("user_id", userId.toString());
         data.add("direction", response);
         System.out.println(data);
-        restTemplate.postForObject(HOST + URL, data, String.class);
+        restTemplate.postForObject(ConfigProperties.getHost() + URL, data, String.class);
     }
 
     /**
