@@ -11,7 +11,7 @@ public class Bot {
         }
     }
 
-    private static boolean check_tail_increasing(int step) {  // 检验当前回合，蛇的长度是否增加
+    private static boolean check_tail_increasing(int step) {
         if (step <= 10) return true;
         return step % 3 == 1;
     }
@@ -30,7 +30,7 @@ public class Bot {
             y += dy[d];
             res.add(new Cell(x, y));
             if (!check_tail_increasing(++step)) {
-                res.removeFirst();
+                res.remove(0);
             }
         }
         return res;
@@ -65,8 +65,8 @@ public class Bot {
 
         int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
         for (int i = 0; i < 4; i++) {
-            int x = aCells.getLast().x + dx[i];
-            int y = aCells.getLast().y + dy[i];
+            int x = aCells.get(aCells.size() - 1).x + dx[i];
+            int y = aCells.get(aCells.size() - 1).y + dy[i];
             if (x >= 0 && x < 13 && y >= 0 && y < 14 && g[x][y] == 0) {
                 return i;
             }
