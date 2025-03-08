@@ -76,7 +76,7 @@ public class CodeRunnerPython extends Thread implements CodeRunner {
 
         try {
             // python [脚本路径] [参数]
-            ProcessBuilder processBuilder = new ProcessBuilder("python", tempFile.toString(), argument);
+            ProcessBuilder processBuilder = new ProcessBuilder("python3", tempFile.toString(), argument);
             processBuilder.redirectErrorStream(true); // 合并标准错误和标准输出
 
             // 启动进程
