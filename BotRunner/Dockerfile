@@ -18,7 +18,13 @@ RUN apt-get update && apt-get install -y \
     && apt-get update && apt-get install -y nodejs \
     # 清理缓存减小镜像大小
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    # 创建各个目录
+    && mkdir -p /app/compiler/java/src/main/java \
+    && mkdir -p /app/compiler/cpp \
+    && mkdir -p /app/compiled/java \
+    && mkdir -p /app/compiled/cpp \
+
 
 WORKDIR /app
 

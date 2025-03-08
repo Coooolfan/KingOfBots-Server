@@ -7,6 +7,7 @@ import com.yang.botrunner.botrunner.Utils.CodeCompiler;
 import com.yang.botrunner.botrunner.Utils.CodeCompilerImpl.CodeCompilerCpp;
 import com.yang.botrunner.botrunner.Utils.CodeCompilerImpl.CodeCompilerJava;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -15,8 +16,9 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class Complier {
     private static RestTemplate restTemplate;
-    private final static String getUncompiled = "http://localhost:8080/api/user/bot/uncompiled/";
-    private final static String updateBot = "http://localhost:8080/api/revice/bot/update/";
+    @Value("${kob.backend.host}")
+    private String HOST;
+    private final static String getUncompiled = "/api/user/bot/uncompiled/";
     @Autowired
     private CodeCompilerJava codeCompilerJava;
 
@@ -30,7 +32,7 @@ public class Complier {
 
     @Scheduled(fixedDelay = 5000)
     public void compile() {
-        String string = restTemplate.getForEntity(getUncompiled, String.class).getBody();
+        String string = restTemplate.getForEntity(HOST + getUncompiled, String.class).getBody();
         JSONArray resp = JSON.parseArray(string);
         for (int i = 0; i < resp.size(); i++) {
             String botString = resp.getString(i);

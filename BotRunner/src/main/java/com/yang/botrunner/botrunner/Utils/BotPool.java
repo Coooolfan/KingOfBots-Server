@@ -4,16 +4,30 @@ import com.yang.botrunner.botrunner.Utils.CodeRunnerImpl.CodeRunnerCpp;
 import com.yang.botrunner.botrunner.Utils.CodeRunnerImpl.CodeRunnerJava;
 import com.yang.botrunner.botrunner.Utils.CodeRunnerImpl.CodeRunnerJavaScript;
 import com.yang.botrunner.botrunner.Utils.CodeRunnerImpl.CodeRunnerPython;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+@Component
 public class BotPool extends Thread {
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition condition = lock.newCondition();
     private final Queue<Bot> bots = new LinkedList<>();
+
+    private CodeRunnerJava codeRunnerJava;
+    private CodeRunnerCpp codeRunnerCpp;
+    private CodeRunnerJavaScript codeRunnerJavaScript;
+    private CodeRunnerPython codeRunnerPython;
+
+    public BotPool(CodeRunnerJava codeRunnerJava, CodeRunnerCpp codeRunnerCpp, CodeRunnerJavaScript codeRunnerJavaScript, CodeRunnerPython codeRunnerPython) {
+        this.codeRunnerJava = codeRunnerJava;
+        this.codeRunnerCpp = codeRunnerCpp;
+        this.codeRunnerJavaScript = codeRunnerJavaScript;
+        this.codeRunnerPython = codeRunnerPython;
+    }
 
     public void addBot(Integer userId, String botCode, String input, String language,String targetFile) {
         lock.lock();
@@ -30,10 +44,10 @@ public class BotPool extends Thread {
 
     private void consume(Bot bot) {
         CodeRunner botCodeRunner = switch (bot.getLanguage().toLowerCase()) {
-            case "java" -> new CodeRunnerJava();
-            case "javascript" -> new CodeRunnerJavaScript();
-            case "cpp" -> new CodeRunnerCpp();
-            case "python" -> new CodeRunnerPython();
+            case "java" -> codeRunnerJava;
+            case "javascript" -> codeRunnerJavaScript;
+            case "cpp" -> codeRunnerCpp;
+            case "python" -> codeRunnerPython;
             default -> throw new IllegalArgumentException("Unsupported language: " + bot.getLanguage());
         };
         botCodeRunner.startTimeout(2000, bot);

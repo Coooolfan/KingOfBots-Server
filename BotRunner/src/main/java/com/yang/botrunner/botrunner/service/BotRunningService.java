@@ -5,7 +5,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BotRunningService {
-    public final static BotPool botPool = new BotPool();
+    private final BotPool botPool;
+
+    public BotRunningService(BotPool botPool) {
+        this.botPool = botPool;
+    }
 
     public String addBot(Integer userId, String botCode, String input, String language,String targetFile) {
         botPool.addBot(userId,botCode,input,language,targetFile);

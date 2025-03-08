@@ -1,6 +1,7 @@
 package com.yang.machtingsystem.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -16,7 +17,9 @@ public class MatchingPool extends Thread {
     private static List<Player> players = new ArrayList<>();
     private ReentrantLock lock = new ReentrantLock();
     private static RestTemplate restTemplate;
-    private final static String startUrl = "http://localhost:8080/pk/start/game/";
+    @Value("${kob.backend.host}")
+    private String HOST;
+    private final static String startUrl = "/pk/start/game/";
 
     @Autowired
     public void setRestTemplate(RestTemplate restTemplate) {
@@ -67,7 +70,7 @@ public class MatchingPool extends Thread {
         map.add("a_bot_id", player1.getBotId().toString());
         map.add("b_id", player2.getUserId().toString());
         map.add("b_bot_id", player2.getBotId().toString());
-        restTemplate.postForObject(startUrl, map, String.class);
+        restTemplate.postForObject(HOST + startUrl, map, String.class);
         System.out.println("Matched players: " + player1.getUserId() + " and " + player2.getUserId());
     }
 
