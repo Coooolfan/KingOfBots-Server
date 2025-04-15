@@ -1,14 +1,9 @@
 package com.yang.botrunner.botrunner.schedule;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import com.yang.botrunner.botrunner.Utils.CodeCompiler;
 import com.yang.botrunner.botrunner.Utils.CodeCompilerImpl.CodeCompilerCpp;
 import com.yang.botrunner.botrunner.Utils.CodeCompilerImpl.CodeCompilerJava;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,7 +24,7 @@ public class Complier {
     public void setRestTemplate(RestTemplate restTemplate) {
         Complier.restTemplate = restTemplate;
     }
-
+/*
     @Scheduled(fixedDelay = 5000)
     public void compile() {
         String string = restTemplate.getForEntity(HOST + getUncompiled, String.class).getBody();
@@ -47,4 +42,6 @@ public class Complier {
             codeCompiler.compile(jsonObject.getString("content"), jsonObject.getInteger("id"));
         }
     }
+
+ */
 }

@@ -1,11 +1,14 @@
 package com.yang.kingofbotsserver.service.impl.user.bot;
 
+import com.yang.kingofbotsserver.config.RabbitConifg;
 import com.yang.kingofbotsserver.mapper.BotMapper;
+import com.yang.kingofbotsserver.model.CompilationMessage;
 import com.yang.kingofbotsserver.pojo.Bot;
 import com.yang.kingofbotsserver.pojo.User;
 import com.yang.kingofbotsserver.service.impl.UserDetailsServiceImpl;
 import com.yang.kingofbotsserver.service.user.bot.UpdateService;
 import com.yang.kingofbotsserver.utils.LanguageHelp;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -18,6 +21,9 @@ import java.util.Map;
 public class UpdateServiceImpl implements UpdateService {
     @Autowired
     BotMapper botMapper;
+    
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public Map<String, String> update(Map<String, String> data) {
@@ -78,6 +84,29 @@ public class UpdateServiceImpl implements UpdateService {
                 new Date()
         );
         botMapper.updateById(new_bot);
+        
+        // 发送MQ消息
+        if (!botStatus.equals("noneed")) {
+            // 只有需要编译的语言才发送消息
+            CompilationMessage message = new CompilationMessage(
+                    bot_id,
+                    content,
+                    language
+            );
+            
+            // 根据语言类型确定路由键
+            String routingKey = "compile." + language.toLowerCase();
+            
+            // 发送消息到RabbitMQ
+            rabbitTemplate.convertAndSend(
+                    RabbitConifg.TOPIC_EXCHANGE_NAME,
+                    routingKey,
+                    message
+            );
+            
+            System.out.println("已发送编译消息到MQ: " + message.getBotId()+" " + message.getContent() + " " + message.getLanguage());
+        }
+        
         map.put("msg", "success");
         return map;
     }

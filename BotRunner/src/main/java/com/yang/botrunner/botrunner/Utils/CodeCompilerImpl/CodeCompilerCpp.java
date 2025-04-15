@@ -8,6 +8,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -31,8 +32,8 @@ public class CodeCompilerCpp implements CodeCompiler {
     }
 
     @Override
-    public void compile(String sourceCode, Integer botId) {
-        System.out.println("sourceCode: " + sourceCode);
+    public void compile(String sourceCode, Integer botId) throws IOException, InterruptedException {
+//        System.out.println("sourceCode: " + sourceCode);
         System.out.println("HOST: " + HOST);
         System.out.println("Gcc_BUILD_PATH: " + Gcc_BUILD_PATH);
         /*
@@ -54,39 +55,35 @@ public class CodeCompilerCpp implements CodeCompiler {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("id", botId.toString());
         // 抹平平台差异，尽量使用java完成文件操作
-        try {
-            java.nio.file.Files.writeString(sourceCodePath, sourceCode);
-            ProcessBuilder processBuilder =
-                    new ProcessBuilder(Gcc_BUILD_PATH, "-o", uuid.toString(), sourceCodePath.toString());
-            processBuilder.directory(Path.of(BUILD_PATH).toFile());
-            processBuilder.inheritIO(); // 将子进程的输入输出流与当前进程的输入输出流连接，可以在控制台看到gradle的输出
-            Process process = processBuilder.start();
-            boolean completed = process.waitFor(30, TimeUnit.SECONDS);
-            int exitCode = completed ? process.exitValue() : -1;
-            if (exitCode == 0) {
-                System.out.println("gcc build completed successfully.");
-                System.out.println("Cpp Bin: " + binPath);
-                // 移动bin包到指定目录
-                java.nio.file.Files.move(binPath, storageBinPath);
-                java.nio.file.Files.delete(sourceCodePath);
-                map.add("status", "ready");
-                map.add("target_file", storageBinPath.toString());
-                restTemplate.postForEntity(HOST + URL, map, String.class);
-            } else if (exitCode == -1) {
-                System.out.println("gcc build timed out ");
-                map.add("status", "timeout");
-                map.add("target_file", "-");
-                restTemplate.postForEntity(HOST + URL, map, String.class);
-            } else {
-                map.add("status", "failed");
-                map.add("target_file", "-");
-                restTemplate.postForEntity(HOST + URL, map, String.class);
-                System.out.println("gcc build failed with exit code: " + exitCode);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        java.nio.file.Files.writeString(sourceCodePath, sourceCode);
+        ProcessBuilder processBuilder =
+                new ProcessBuilder(Gcc_BUILD_PATH, "-o", uuid.toString(), sourceCodePath.toString());
+        processBuilder.directory(Path.of(BUILD_PATH).toFile());
+        processBuilder.inheritIO(); // 将子进程的输入输出流与当前进程的输入输出流连接，可以在控制台看到gradle的输出
+        Process process = processBuilder.start();
+        boolean completed = process.waitFor(30, TimeUnit.SECONDS);
+        int exitCode = completed ? process.exitValue() : -1;
+        if (exitCode == 0) {
+            System.out.println("gcc build completed successfully.");
+            System.out.println("Cpp Bin: " + binPath);
+            // 移动bin包到指定目录
+            java.nio.file.Files.move(binPath, storageBinPath);
+            java.nio.file.Files.delete(sourceCodePath);
+            map.add("status", "ready");
+            map.add("target_file", storageBinPath.toString());
+            restTemplate.postForEntity(HOST + URL, map, String.class);
+        } else if (exitCode == -1) {
+            System.out.println("gcc build timed out ");
+            map.add("status", "timeout");
+            map.add("target_file", "-");
+            restTemplate.postForEntity(HOST + URL, map, String.class);
+        } else {
+            map.add("status", "failed");
+            map.add("target_file", "-");
+            restTemplate.postForEntity(HOST + URL, map, String.class);
+            System.out.println("gcc build failed with exit code: " + exitCode);
         }
+
 
     }
 }
